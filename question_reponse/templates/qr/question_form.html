@@ -1,0 +1,15 @@
+{% extends './base.html' %}
+
+{% block header %}
+  <h3>{% block title %}Ask a question{% endblock%}</h3>
+{% endblock %}
+
+
+{% block content %}
+    <form method="POST" action="">
+      {% csrf_token %}
+        {{ form.topic }}<br>
+        {{ form.description }}<br>
+      <input class="btn btn-primary" type="submit" value="Ask">
+    </form>
+{% endblock %}

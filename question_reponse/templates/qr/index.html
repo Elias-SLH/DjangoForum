@@ -1,0 +1,41 @@
+{% extends './base.html' %}
+
+{% block header%}
+
+  <h3>{% block title %}Latest questions{% endblock%}</h3>
+
+{% endblock%}
+
+
+{% block content %}
+
+  {% if latest_question_list %}
+      {% for question in latest_question_list %}
+        <ul>
+          <li><a href="{% url 'qr:detail' question.id %}">{{ question.topic }}</a>
+            <small><i>{{ question.user }}</i> | {{ question.pub_date|date:"d/m/Y"}}
+            | ({{ question.quest.count }} answers)</small></li>
+        </ul>
+      {% endfor %}
+
+      <div class="pagination" style="margin-top:50px; padding-left:400px;">
+        <span class="step-links">
+          {% if page_obj.has_previous %}
+              <a href="?page={{ page_obj.previous_page_number }}">&laquo; previous</a>
+          {% endif %}
+
+          <span class="current text-secondary">
+              page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+          </span>
+
+          {% if page_obj.has_next %}
+              <a href="?page={{ page_obj.next_page_number }}">next &raquo;</a>
+          {% endif %}
+        </span>
+      </div>
+
+  {% else %}
+    <p>No questions are available.</p>
+  {% endif %}
+
+{% endblock %}

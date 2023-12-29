@@ -1,0 +1,19 @@
+{% extends './base.html' %}
+
+{% block header %}
+  <h3>{% block title %}Edit your answer{% endblock%}</h3>
+{% endblock %}
+
+
+{% block content %}
+  {% if answer.user.id == user.id %}
+    <form method="POST" action="">
+      {% csrf_token %}
+        {{ form.reply }}<br>
+      <input class="btn btn-primary" type="submit" value="Edit">
+    </form>
+  {% else %}
+    <p>You can't edit someone else's answer.</p>
+    <meta http-equiv="refresh" content="2;url={% url 'qr:detail' answer.question.id %}">
+  {% endif %}
+{% endblock %}

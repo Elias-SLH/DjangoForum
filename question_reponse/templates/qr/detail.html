@@ -1,0 +1,67 @@
+{% extends './base.html' %}
+
+{% block header %}
+  <h3>{% block title %}Question details{% endblock%}</h3>
+  <hr>
+{% endblock %}
+
+{% block content %}
+  <div id='question'>
+    <h4><i>{{ question.topic }}</i></h4><br>
+    <p class="mt-3">{{ question.description|safe|linebreaks}}</p>
+    <small>By <b>{{ question.user }}</b> | {{ question.pub_date|date:"d/m/Y" }}</small>
+    {% if question.user.id == user.id %}
+      <small>| <a href="{% url 'qr:edit_question' question.pk %}">Edit</a>
+      | <a href="{% url 'qr:delete_question' question.pk %}">Delete</a></small>
+    {% endif %}
+
+    {% if not question.user.id == user.id %}
+      <form action="{% url 'qr:vote' question.id %}" method="POST">
+        {% csrf_token %}
+        {% if upvoted %}
+          <br>
+          <button type="submit" name="question_upvote_id" value="{{ question.id }}"
+          class="btn btn-primary btn-small" disabled>upvote</button>
+          <button type="submit" name="question_upvote_id" value="{{ question.id }}"
+          class="btn btn-danger btn-small">downvote</button>
+        {% else %}
+          <br>
+          <button type="submit" name="question_upvote_id" value="{{ question.id }}"
+          class="btn btn-primary btn-small">upvote</button>
+          <button type="submit" name="question_upvote_id" value="{{ question.id }}"
+          class="btn btn-danger btn-small" disabled>downvote</button>
+        {% endif %}
+    {% endif %}
+        <small> | {{ question_upvotes }} point{{ question_upvotes|pluralize }}</small>
+      </form>
+  </div>
+
+  <br/><hr>
+
+  <div id='answers'>
+    <br><h4>Answers({{ post_answer_count }})</h4><br>
+    {% for answer in post_answer %}
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <p>{{ answer.reply|safe|linebreaks }}</p>
+            <small>By <b>{{ answer.user }}</b> | {{ answer.pub_date|date:"d/m/Y" }}</small>
+            {% if answer.user.id == user.id %}
+              <small>| <a href="{% url 'qr:edit_answer' answer.pk %}">Edit</a>
+              | <a href="{% url 'qr:delete_answer' answer.pk %}">Delete</a></small>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <br>
+    {% endfor %}
+  </div>
+
+  <hr>
+
+    <form method="POST" action="{% url 'qr:detail' question.id %}">
+      {% csrf_token %}
+        {{ form.reply }}<br>
+      <input class="btn btn-primary" type="submit" value="Answer">
+    </form>
+{% endblock %}

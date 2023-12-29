@@ -1,0 +1,41 @@
+{% extends './base.html' %}
+
+{% block header %}
+  <h3>{% block title %}{{ request.user }}'s profile{% endblock%}</h3>
+{% endblock %}
+
+
+{% block content %}
+
+  <h4 class='my_profile'>My questions</h4>
+  {% if questions %}
+    {% for question in questions %}
+      <ul>
+        <li>
+          <a href="{% url 'qr:detail' question.id %}">{{ question.topic }}</a><br>
+          <small>{{ question.description|truncatewords:20 }}</small>
+        </li>
+      </ul>
+    {% endfor %}
+  {% else %}
+    <p style="padding-left:15px;">You didn't ask any questions.</p>
+  {% endif %}
+
+  <br><h4 class='my_profile'>My answers</h4>
+  {% if answers %}
+    {% for answer in answers %}
+      <ul>
+        <li>
+          <a href="{% url 'qr:detail' answer.question.id %}">{{ answer.question.topic }}</a>
+          <small><i>By {{ answer.question.user }} | {{ answer.question.pub_date|date:"d/m/Y" }}</i><br>
+          {{ answer.reply|truncatewords:20 }}</small>
+        </li>
+      </ul>
+    {% endfor %}
+  {% else %}
+    <p style="padding-left:15px;">You didn't answer any questions.</p>
+  {% endif %}
+
+  <br/><br/><a href="{% url 'qr:disable_user' user.pk %}" id='disable_user'>Disable account</a>
+
+{% endblock %}

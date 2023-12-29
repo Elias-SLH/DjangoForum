@@ -1,0 +1,25 @@
+{% extends './base.html' %}
+
+{% block header %}
+  <h3>{% block title %}Seach results{% endblock%}</h3>
+{% endblock %}
+
+{% block content %}
+
+  {% if searched %}
+    {% if questions %}
+      {% for question in questions %}
+        <ul>
+          <li><a href="{% url 'qr:detail' question.id %}">{{ question.topic }}</a>
+            <small><i>{{ question.user }}</i> | {{ question.pub_date|date:"d/m/Y"}}
+            | ({{ question.quest.count }} answers)</small></li>
+        </ul>
+      {% endfor %}
+    {% else %}
+      <p>No questions found.</p>
+    {% endif %}
+  {% else %}
+    <p>No questions found.</p>
+  {% endif %}
+
+{% endblock %}
